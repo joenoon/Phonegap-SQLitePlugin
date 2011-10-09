@@ -54,8 +54,8 @@
     if (dbFile == NULL) {
         return NULL;
     }
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%@", appDocsPath, dbFile];
-    return dbPath;
+
+    return [NSString stringWithFormat:@"%@/%@", appDocsPath, dbFile];
 }
 
 -(void) open: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
