@@ -7,7 +7,9 @@
 root = this
 
 fail = (e) ->
-  console.log "Error in PGSQLitePlugin Lawnchair adapter: #{e.message}"
+  # SQLITE_CONSTRAINT can be common when working asynchronously, first in wins
+  unless e.code == PGSQLitePlugin::SQLITE_CONSTRAINT
+    console.log "Error in PGSQLitePlugin Lawnchair adapter: #{JSON.stringify(e)}"
   return
 
 now = () -> (new Date()).getTime()

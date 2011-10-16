@@ -7,7 +7,9 @@
   var fail, now, pgsqlite_plugin, root;
   root = this;
   fail = function(e) {
-    console.log("Error in PGSQLitePlugin Lawnchair adapter: " + e.message);
+    if (e.code !== PGSQLitePlugin.prototype.SQLITE_CONSTRAINT) {
+      console.log("Error in PGSQLitePlugin Lawnchair adapter: " + (JSON.stringify(e)));
+    }
   };
   now = function() {
     return (new Date()).getTime();

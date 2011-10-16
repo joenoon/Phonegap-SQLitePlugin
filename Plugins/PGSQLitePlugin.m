@@ -215,13 +215,16 @@
                 break;
                 
             default:
-                errMsg = "SQL statement error";
+                errMsg = "SQLITE Error";
                 keepGoing = NO;
         }
     }
     
     if (errMsg != NULL) {
-        [self respond:callback withString:[NSString stringWithFormat:@"{ message: 'SQL statement error : %s' }", errMsg] withType:@"error"];
+        [resultSet setObject:[NSString stringWithFormat:@"%s", sqlite3_sql(statement)] forKey:@"sql"];
+        [resultSet setObject:[NSString stringWithFormat:@"%s", errMsg] forKey:@"message"];
+        [resultSet setObject:[NSNumber numberWithInt: result] forKey:@"code"];
+        [self respond:callback withString:[resultSet JSONRepresentation] withType:@"error"];
     } else {
         [resultSet setObject:resultRows forKey:@"rows"];
         [resultSet setObject:rowsAffected forKey:@"rowsAffected"];

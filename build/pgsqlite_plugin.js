@@ -27,6 +27,35 @@
     return opts;
   };
   root.PGSQLitePlugin = (function() {
+    PGSQLitePlugin.prototype.SQLITE_OK = 0;
+    PGSQLitePlugin.prototype.SQLITE_ERROR = 1;
+    PGSQLitePlugin.prototype.SQLITE_INTERNAL = 2;
+    PGSQLitePlugin.prototype.SQLITE_PERM = 3;
+    PGSQLitePlugin.prototype.SQLITE_ABORT = 4;
+    PGSQLitePlugin.prototype.SQLITE_BUSY = 5;
+    PGSQLitePlugin.prototype.SQLITE_LOCKED = 6;
+    PGSQLitePlugin.prototype.SQLITE_NOMEM = 7;
+    PGSQLitePlugin.prototype.SQLITE_READONLY = 8;
+    PGSQLitePlugin.prototype.SQLITE_INTERRUPT = 9;
+    PGSQLitePlugin.prototype.SQLITE_IOERR = 10;
+    PGSQLitePlugin.prototype.SQLITE_CORRUPT = 11;
+    PGSQLitePlugin.prototype.SQLITE_NOTFOUND = 12;
+    PGSQLitePlugin.prototype.SQLITE_FULL = 13;
+    PGSQLitePlugin.prototype.SQLITE_CANTOPEN = 14;
+    PGSQLitePlugin.prototype.SQLITE_PROTOCOL = 15;
+    PGSQLitePlugin.prototype.SQLITE_EMPTY = 16;
+    PGSQLitePlugin.prototype.SQLITE_SCHEMA = 17;
+    PGSQLitePlugin.prototype.SQLITE_TOOBIG = 18;
+    PGSQLitePlugin.prototype.SQLITE_CONSTRAINT = 19;
+    PGSQLitePlugin.prototype.SQLITE_MISMATCH = 20;
+    PGSQLitePlugin.prototype.SQLITE_MISUSE = 21;
+    PGSQLitePlugin.prototype.SQLITE_NOLFS = 22;
+    PGSQLitePlugin.prototype.SQLITE_AUTH = 23;
+    PGSQLitePlugin.prototype.SQLITE_FORMAT = 24;
+    PGSQLitePlugin.prototype.SQLITE_RANGE = 25;
+    PGSQLitePlugin.prototype.SQLITE_NOTADB = 26;
+    PGSQLitePlugin.prototype.SQLITE_ROW = 100;
+    PGSQLitePlugin.prototype.SQLITE_DONE = 101;
     PGSQLitePlugin.prototype.openDBs = {};
     function PGSQLitePlugin(dbPath, openSuccess, openError) {
       this.dbPath = dbPath;
