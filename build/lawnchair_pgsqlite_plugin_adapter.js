@@ -20,7 +20,7 @@
       var cb, sql, success, that;
       that = this;
       cb = this.fn(this.name, callback);
-      sql = "CREATE TABLE IF NOT EXISTS " + this.name + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)";
+      sql = "CREATE TABLE IF NOT EXISTS " + this.name + " (id TEXT PRIMARY KEY, value TEXT, timestamp REAL)";
       success = function() {
         cb.call(that, that);
       };
