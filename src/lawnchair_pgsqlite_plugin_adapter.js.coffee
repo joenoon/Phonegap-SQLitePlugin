@@ -19,7 +19,7 @@ pgsqlite_plugin =
   init: (options, callback) ->
     that = this
     cb = @fn(@name, callback)
-    sql = "CREATE TABLE IF NOT EXISTS #{@name} (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)"
+    sql = "CREATE TABLE IF NOT EXISTS #{@name} (id TEXT PRIMARY KEY, value TEXT, timestamp REAL)"
     success = () ->
       cb.call(that, that)
       return
