@@ -16,7 +16,7 @@ now = () -> (new Date()).getTime()
 
 pgsqlite_plugin =
   
-  valid: () -> !!(("PGSQLitePlugin" of root) && ("device" of root))
+  valid: () -> !!("PGSQLitePlugin" of root)
 
   init: (options, callback) ->
     that = this
