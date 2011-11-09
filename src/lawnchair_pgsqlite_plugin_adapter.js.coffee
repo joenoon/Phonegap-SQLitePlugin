@@ -200,13 +200,13 @@ pgsqlite_plugin =
   nuke: (cb) ->
     that = this
     db = @db
-    sql = "DELETE FROM #{@name}"
-    success = () ->
-      that.lambda(cb).call(that) if cb
-      # clean up the db
-      db.executeSql "VACUUM"
+    db.executeSql "DELETE FROM #{@name}", () ->
+      db.executeSql "VACUUM", () ->
+        that.lambda(cb).call(that) if cb
+        return
+      , fail
       return
-    @db.executeSql sql, success, fail
+    , fail
     this
 
 PGSQLitePlugin.lawnchair_adapter = pgsqlite_plugin

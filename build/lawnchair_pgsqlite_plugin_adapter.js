@@ -255,17 +255,16 @@
       return this;
     },
     nuke: function(cb) {
-      var db, sql, success, that;
+      var db, that;
       that = this;
       db = this.db;
-      sql = "DELETE FROM " + this.name;
-      success = function() {
-        if (cb) {
-          that.lambda(cb).call(that);
-        }
-        db.executeSql("VACUUM");
-      };
-      this.db.executeSql(sql, success, fail);
+      db.executeSql("DELETE FROM " + this.name, function() {
+        db.executeSql("VACUUM", function() {
+          if (cb) {
+            that.lambda(cb).call(that);
+          }
+        }, fail);
+      }, fail);
       return this;
     }
   };
