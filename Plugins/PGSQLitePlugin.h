@@ -26,12 +26,10 @@
 
 #ifdef PHONEGAP_FRAMEWORK
     #import <PhoneGap/PGPlugin.h>
-    #import <PhoneGap/JSON.h>
     #import <PhoneGap/PhoneGapDelegate.h>
     #import <PhoneGap/File.h>
 #else
     #import "PGPlugin.h"
-    #import "JSON.h"
     #import "PhoneGapDelegate.h"
     #import "File.h"
 #endif
