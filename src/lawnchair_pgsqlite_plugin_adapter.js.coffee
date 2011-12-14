@@ -15,7 +15,7 @@ fail = (e) ->
 now = () -> (new Date()).getTime()
 
 pgsqlite_plugin =
-  
+
   valid: () -> !!("PGSQLitePlugin" of root)
 
   init: (options, callback) ->
@@ -25,8 +25,9 @@ pgsqlite_plugin =
     success = () ->
       cb.call(that, that)
       return
-    # open a connection and create the db if it doesn't exist 
-    @db = new PGSQLitePlugin("#{@name}.sqlite3")
+    # open a connection and create the db if it doesn't exist
+    db = options.db || @name
+    @db = new PGSQLitePlugin("#{db}.sqlite3")
     @db.executeSql sql, success, fail
     return
 
@@ -37,7 +38,7 @@ pgsqlite_plugin =
     success = (res) ->
       cb.call(that, res.rows)
       return
-    @db.executeSql sql, success, fail  
+    @db.executeSql sql, success, fail
     this
 
   save: (obj, callback) ->
@@ -62,7 +63,7 @@ pgsqlite_plugin =
 
   batch: (objs, cb) ->
     return this unless objs && objs.length > 0
-    
+
     that = this
     done = false
     finalized = false
@@ -84,17 +85,17 @@ pgsqlite_plugin =
       results.push(obj)
       checkComplete()
       return
-      
+
     ins = "INSERT INTO #{@name} (value, timestamp, id) VALUES (?,?,?)"
     up = "UPDATE #{@name} SET value = ?, timestamp = ? WHERE id = ?"
-  
+
     marks = []
     keys = []
     for x in objs when x.key
       marks.push "?"
       keys.push x.key
     marks = marks.join(",")
-  
+
     exists_success = (res) ->
       rows = res.rows
       # one pass through to create an efficient lookup table
@@ -115,15 +116,15 @@ pgsqlite_plugin =
             t.executeSql [ sql ].concat(val), success, fail
             return
         return
-        
+
       transaction_success = () ->
         done = true
         checkComplete()
         return
-      
+
       db.transaction transaction, transaction_success, fail
       return
-    
+
     if keys.length > 0
       # the case where there is at least one object with an existing key
       exists_sql = [ "SELECT id FROM #{@name} WHERE id IN (#{marks})" ].concat(keys)
@@ -131,7 +132,7 @@ pgsqlite_plugin =
     else
       # the case where every object is new, so we don't need to do a select query first
       exists_success({ rows: [] })
-    
+
     this
 
   get: (keyOrArray, cb) ->
@@ -152,13 +153,13 @@ pgsqlite_plugin =
           o = JSON.parse(row.value)
           o.key = row.id
           o
-      
+
       r = r[0] if !is_array
       that.lambda(cb).call(that, r) if cb
       return
-    
+
     @db.executeSql sql, success, fail
-    this 
+    this
 
   exists: (key, cb) ->
     that = this
