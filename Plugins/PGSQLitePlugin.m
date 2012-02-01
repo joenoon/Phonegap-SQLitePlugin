@@ -33,7 +33,7 @@
 }
 
 -(void) respond: (id)cb withString:(NSString *)str withType:(NSString *)type {
-    if (cb != NULL) {
+    if (cb) {
         NSString* jsString = [NSString stringWithFormat:@"PGSQLitePlugin.handleCallback('%@', '%@', %@);", cb, type, str ];
         [self writeJavascript:jsString];
     }
@@ -68,6 +68,21 @@
     NSValue *dbPointer = [NSValue valueWithPointer:db];
     [openDBs setObject:dbPointer forKey: dbPath];
     [self respond:callback withString: @"{ message: 'Database opened' }" withType:@"success"];
+}
+
+-(void) purge: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+{
+    NSString *callback = [options objectForKey:@"callback"];
+    NSString *dbPath = [self getDBPath:[options objectForKey:@"path"]];
+    
+    if (dbPath == NULL) {
+        [self respond:callback withString:@"{ message: 'You must specify database path' }" withType:@"error"];
+        return;
+    }
+    
+    [[NSFileManager defaultManager] removeItemAtPath:dbPath error:NULL];
+    [self respond:callback withString:@"{ message: 'purged' }" withType:@"success"];
+
 }
 
 -(void) backgroundExecuteSqlBatch: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
@@ -237,6 +252,7 @@
     sqlite3 *db = [val pointerValue];
     if (db == NULL) {
         [self respond:callback withString: @"{ message: 'Specified db was not open' }" withType:@"error"];
+        return;
     }
     sqlite3_close (db);
     [self respond:callback withString: @"{ message: 'db closed' }" withType:@"success"];

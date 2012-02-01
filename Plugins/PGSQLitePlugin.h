@@ -30,6 +30,7 @@
 @property (nonatomic, retain) NSString *appDocsPath;
 
 -(void) open:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+-(void) purge: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 -(void) backgroundExecuteSqlBatch:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 -(void) backgroundExecuteSql:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 -(void) executeSqlBatch:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;

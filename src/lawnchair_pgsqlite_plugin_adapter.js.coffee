@@ -10,6 +10,7 @@ fail = (e) ->
   # SQLITE_CONSTRAINT can be common when working asynchronously, first in wins
   unless e.code == PGSQLitePlugin::SQLITE_CONSTRAINT
     console.log "Error in PGSQLitePlugin Lawnchair adapter: #{JSON.stringify(e)}"
+    PGSQLitePlugin::onError(e)
   return
 
 now = () -> (new Date()).getTime()

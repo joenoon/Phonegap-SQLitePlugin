@@ -102,6 +102,13 @@ class root.PGSQLitePlugin
       opts = getOptions({ path: @dbPath }, success, error)
       PhoneGap.exec("PGSQLitePlugin.close", opts)
     return
+  
+  purge: (success, error) ->
+    opts = getOptions({ path: @dbPath }, success, error)
+    PhoneGap.exec("PGSQLitePlugin.purge", opts)
+    return
+  
+  onError: (e) ->
 
 class root.PGSQLitePluginTransaction
   
