@@ -12,17 +12,17 @@
 #import <Foundation/Foundation.h>
 #import "sqlite3.h"
 
-#ifdef PHONEGAP_FRAMEWORK
-    #import <PhoneGap/PGPlugin.h>
-    #import <PhoneGap/PhoneGapDelegate.h>
-    #import <PhoneGap/File.h>
+#ifdef CORDOVA_FRAMEWORK
+#import <Cordova/CDVPlugin.h>
+#import <Cordova/CDVFile.h>
+#import <Cordova/JSONKit.h>
 #else
-    #import "PGPlugin.h"
-    #import "PhoneGapDelegate.h"
-    #import "File.h"
+#import "CDVPlugin.h"
+#import "File.h"
+#import "JSONKit.h"
 #endif
 
-@interface PGSQLitePlugin : PGPlugin {
+@interface PGSQLitePlugin : CDVPlugin {
     NSMutableDictionary *openDBs;
 }
 

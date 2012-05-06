@@ -17,14 +17,13 @@
 @synthesize openDBs;
 @synthesize appDocsPath;
 
--(PGPlugin*) initWithWebView:(UIWebView*)theWebView
+-(CDVPlugin*) initWithWebView:(UIWebView*)theWebView
 {
     self = (PGSQLitePlugin*)[super initWithWebView:theWebView];
     if (self) {
         openDBs = [NSMutableDictionary dictionaryWithCapacity:0];
-        [openDBs retain];
         
-        PGFile* pgFile = [[self appDelegate] getCommandInstance: @"com.phonegap.file"];
+        CDVFile* pgFile = [[self appDelegate] getCommandInstance: @"com.phonegap.file"];
         NSString *docs = [pgFile appDocsPath];
         [self setAppDocsPath:docs];
 
