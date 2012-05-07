@@ -106,5 +106,5 @@ I played with the idea of batching responses into larger sets of
 writeJavascript on a timer, however there was only a barely noticeable
 performance gain.  So I took it out, not worth it.  However there is a
 massive performance gain by batching on the client-side to minimize
-PhoneGap.exec calls using the transaction support.
+cordova.exec calls using the transaction support.
 

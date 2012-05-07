@@ -81,7 +81,7 @@ class root.PGSQLitePlugin
   executeSql: (sql, success, error) ->
     throw new Error "Cannot executeSql without a query" unless sql
     opts = getOptions({ query: [].concat(sql || []), path: @dbPath }, success, error)
-    PhoneGap.exec("PGSQLitePlugin.backgroundExecuteSql", opts)
+    cordova.exec("PGSQLitePlugin.backgroundExecuteSql", opts)
     return
 
   transaction: (fn, success, error) ->
@@ -93,19 +93,19 @@ class root.PGSQLitePlugin
     unless @dbPath of @openDBs
       @openDBs[@dbPath] = true
       opts = getOptions({ path: @dbPath }, success, error)
-      PhoneGap.exec("PGSQLitePlugin.open", opts)
+      cordova.exec("PGSQLitePlugin.open", opts)
     return
   
   close: (success, error) ->
     if @dbPath of @openDBs
       delete @openDBs[@dbPath]
       opts = getOptions({ path: @dbPath }, success, error)
-      PhoneGap.exec("PGSQLitePlugin.close", opts)
+      cordova.exec("PGSQLitePlugin.close", opts)
     return
   
   purge: (success, error) ->
     opts = getOptions({ path: @dbPath }, success, error)
-    PhoneGap.exec("PGSQLitePlugin.purge", opts)
+    cordova.exec("PGSQLitePlugin.purge", opts)
     return
   
   onError: (e) ->
@@ -126,7 +126,7 @@ class root.PGSQLitePluginTransaction
     commit_opts = getOptions({ query: [ "COMMIT;" ], path: @dbPath }, success, error)
     executes = [ begin_opts ].concat(@executes).concat([ commit_opts ])
     opts = { executes: executes }
-    PhoneGap.exec("PGSQLitePlugin.backgroundExecuteSqlBatch", opts)
+    cordova.exec("PGSQLitePlugin.backgroundExecuteSqlBatch", opts)
     @executes = []
     return
 
