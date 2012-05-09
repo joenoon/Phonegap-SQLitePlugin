@@ -9,6 +9,7 @@
   fail = function(e) {
     if (e.code !== PGSQLitePlugin.prototype.SQLITE_CONSTRAINT) {
       console.log("Error in PGSQLitePlugin Lawnchair adapter: " + (JSON.stringify(e)));
+      PGSQLitePlugin.prototype.onError(e);
     }
   };
   now = function() {
@@ -19,14 +20,15 @@
       return !!("PGSQLitePlugin" in root);
     },
     init: function(options, callback) {
-      var cb, sql, success, that;
+      var cb, db, sql, success, that;
       that = this;
       cb = this.fn(this.name, callback);
       sql = "CREATE TABLE IF NOT EXISTS " + this.name + " (id TEXT PRIMARY KEY, value TEXT, timestamp REAL)";
       success = function() {
         cb.call(that, that);
       };
-      this.db = new PGSQLitePlugin("" + this.name + ".sqlite3");
+      db = options.db || this.name;
+      this.db = new PGSQLitePlugin("" + db + ".sqlite3");
       this.db.executeSql(sql, success, fail);
     },
     keys: function(callback) {

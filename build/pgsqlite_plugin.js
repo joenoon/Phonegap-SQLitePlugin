@@ -119,6 +119,14 @@
         PhoneGap.exec("PGSQLitePlugin.close", opts);
       }
     };
+    PGSQLitePlugin.prototype.purge = function(success, error) {
+      var opts;
+      opts = getOptions({
+        path: this.dbPath
+      }, success, error);
+      PhoneGap.exec("PGSQLitePlugin.purge", opts);
+    };
+    PGSQLitePlugin.prototype.onError = function(e) {};
     return PGSQLitePlugin;
   })();
   root.PGSQLitePluginTransaction = (function() {
