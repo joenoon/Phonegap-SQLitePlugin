@@ -6,11 +6,11 @@
 
 root = this
 
-fail = (e) ->
+onError = (e) ->
   # SQLITE_CONSTRAINT can be common when working asynchronously, first in wins
   unless e.code == PGSQLitePlugin::SQLITE_CONSTRAINT
     console.log "Error in PGSQLitePlugin Lawnchair adapter: #{JSON.stringify(e)}"
-    PGSQLitePlugin::onError(e)
+    @db.onError(e)
   return
 
 now = () -> (new Date()).getTime()
@@ -22,6 +22,9 @@ pgsqlite_plugin =
   init: (options, callback) ->
     that = this
     cb = @fn(@name, callback)
+    @fail = () ->
+      args = Array::slice.call(arguments)
+      onError.apply that, args
     sql = "CREATE TABLE IF NOT EXISTS #{@name} (id TEXT PRIMARY KEY, value TEXT, timestamp REAL)"
     success = () ->
       cb.call(that, that)
@@ -29,7 +32,7 @@ pgsqlite_plugin =
     # open a connection and create the db if it doesn't exist
     db = options.db || @name
     @db = new PGSQLitePlugin("#{db}.sqlite3")
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     return
 
   keys: (callback) ->
@@ -39,7 +42,7 @@ pgsqlite_plugin =
     success = (res) ->
       cb.call(that, res.rows)
       return
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     this
 
   save: (obj, callback) ->
@@ -58,7 +61,7 @@ pgsqlite_plugin =
       delete obj.key
       val.unshift(JSON.stringify(obj))
       sql = if exists then up else ins
-      db.executeSql [ sql ].concat(val), success, fail
+      db.executeSql [ sql ].concat(val), success, that.fail
       return
     this
 
@@ -114,7 +117,7 @@ pgsqlite_plugin =
             sql = if obj.key of ids_hash then up else ins
             delete obj.key
             val.unshift(JSON.stringify(obj))
-            t.executeSql [ sql ].concat(val), success, fail
+            t.executeSql [ sql ].concat(val), success, that.fail
             return
         return
 
@@ -123,7 +126,7 @@ pgsqlite_plugin =
         checkComplete()
         return
 
-      db.transaction transaction, transaction_success, fail
+      db.transaction transaction, transaction_success, that.fail
       return
 
     if keys.length > 0
@@ -159,7 +162,7 @@ pgsqlite_plugin =
       that.lambda(cb).call(that, r) if cb
       return
 
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     this
 
   exists: (key, cb) ->
@@ -168,7 +171,7 @@ pgsqlite_plugin =
     success = (res) ->
       that.fn("exists", cb).call(that, res.rows.length > 0) if cb
       return
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     this
 
   all: (callback) ->
@@ -184,7 +187,7 @@ pgsqlite_plugin =
           obj
       cb.call(that, r)
       return
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     this
 
   remove: (keyOrObj, cb) ->
@@ -196,7 +199,7 @@ pgsqlite_plugin =
     success = () ->
       that.lambda(cb).call(that) if cb
       return
-    @db.executeSql sql, success, fail
+    @db.executeSql sql, success, @fail
     this
 
   nuke: (cb) ->
@@ -206,9 +209,9 @@ pgsqlite_plugin =
       db.executeSql "VACUUM", () ->
         that.lambda(cb).call(that) if cb
         return
-      , fail
+      , that.fail
       return
-    , fail
+    , that.fail
     this
 
 PGSQLitePlugin.lawnchair_adapter = pgsqlite_plugin
